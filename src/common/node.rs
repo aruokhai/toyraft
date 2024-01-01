@@ -2,17 +2,20 @@ use core::time;
 use std::{time::Duration, error::Error};
 use rand::{self, Rng};
 
+use super::entry::Entry;
+
 pub struct Node {
     pub status: NodeStatus,
     pub election_timeout: Duration,
     pub current_term: u64,
-
+    pub log: Vec<Entry>,
+    pub voted_for: Option<u32>
 }
 
 pub enum NodeStatus {
-    Follower = 0,
-    Candidate = 1, 
-    Leader = 2,
+    Follower,
+    Candidate, 
+    Leader { next_index: u64, match_index: u64 },
 }
 
 impl Node {
@@ -27,6 +30,8 @@ impl Node {
                     status: NodeStatus::Follower,
                     election_timeout: Duration::from_secs(election_timeout),
                     current_term,
+                    log: vec![],
+                    voted_for: None
                 };
                 return Ok(node)
             }
@@ -34,6 +39,18 @@ impl Node {
         }
         return  Err(());
     }
+
+    pub fn is_entry_present(&self, entry_index: u64, entry_term: u64) -> bool {
+        let log = self.log;
+        for entry in log {
+            if (entry.index == entry_index) && (entry.term == entry_term) {
+                return true
+            }
+        }
+        false
+    }
+
+
 
 
 

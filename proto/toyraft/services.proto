@@ -29,6 +29,6 @@ message RequestVoteResponse {
 
 service PublicNodeServices {
     
-    rpc append_entries(AppendEntriesRequest) returns (AppendEntriesResponse) {}
+    // rpc append_entries(AppendEntriesRequest) returns (AppendEntriesResponse) {}
     rpc request_vote(RequestVoteRequest) returns (RequestVoteResponse) {}
 }
